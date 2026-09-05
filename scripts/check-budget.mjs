@@ -13,7 +13,11 @@ const DIST = resolve(process.cwd(), 'dist')
 const BUDGETS = {
   jsTotalKb: 1536, // первая загрузка JS, ≤ 1,5 МБ
   cssTotalKb: 160,
-  singleFileKb: 900,
+  singleFileKb: 900, // для кода и картинок
+  // Справочник живёт по своим правилам: он не в первой загрузке, а грузится
+  // по требованию и кэшируется. Пределы из docs/ПЛАН.md §5.
+  dataTotalKb: 15360, // всё ядро на 30 языков ≤ 15 МБ
+  dataSingleKb: 1500, // ни один файл справочника не должен раздуться
 }
 
 if (!existsSync(DIST)) {
@@ -35,8 +39,13 @@ function walk(dir) {
 const files = walk(DIST)
 const kb = (bytes) => Math.round((bytes / 1024) * 10) / 10
 
-const js = files.filter((f) => extname(f.path) === '.js')
-const css = files.filter((f) => extname(f.path) === '.css')
+const slash = (p) => p.split('\\').join('/')
+const isData = (f) => slash(f.path).includes('data/core/')
+const dataFiles = files.filter(isData)
+const dataKb = kb(dataFiles.reduce((a, f) => a + f.bytes, 0))
+
+const js = files.filter((f) => extname(f.path) === '.js' && !isData(f))
+const css = files.filter((f) => extname(f.path) === '.css' && !isData(f))
 const jsKb = kb(js.reduce((a, f) => a + f.bytes, 0))
 const cssKb = kb(css.reduce((a, f) => a + f.bytes, 0))
 const totalKb = kb(files.reduce((a, f) => a + f.bytes, 0))
@@ -45,10 +54,12 @@ const problems = []
 if (jsKb > BUDGETS.jsTotalKb) problems.push(`JS ${jsKb} КБ > ${BUDGETS.jsTotalKb} КБ`)
 if (cssKb > BUDGETS.cssTotalKb) problems.push(`CSS ${cssKb} КБ > ${BUDGETS.cssTotalKb} КБ`)
 for (const f of files) {
-  if (kb(f.bytes) > BUDGETS.singleFileKb) {
-    problems.push(`${f.path} — ${kb(f.bytes)} КБ > ${BUDGETS.singleFileKb} КБ`)
-  }
+  const limit = isData(f) ? BUDGETS.dataSingleKb : BUDGETS.singleFileKb
+  if (kb(f.bytes) > limit) problems.push(`${f.path} — ${kb(f.bytes)} КБ > ${limit} КБ`)
 }
+if (dataKb > BUDGETS.dataTotalKb) problems.push(`справочник ${dataKb} КБ > ${BUDGETS.dataTotalKb} КБ`)
+// Пустой справочник в сборке — та же неправда, что и неверные данные.
+if (dataFiles.length < 32) problems.push(`в сборке только ${dataFiles.length} файлов справочника, ожидали 33`)
 
 // Обязательные файлы: без них Pages отдаст 404 на маршрутах, а телефон не поставит приложение.
 for (const must of ['index.html', '404.html', 'manifest.webmanifest', 'sw.js']) {
@@ -58,7 +69,9 @@ for (const icon of ['icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-mask
   if (!files.some((f) => f.path.replace(/\\/g, '/') === icon)) problems.push(`нет ${icon}`)
 }
 
-console.log(`Сборка: ${files.length} файлов, ${totalKb} КБ · JS ${jsKb} КБ · CSS ${cssKb} КБ`)
+console.log(
+  `Сборка: ${files.length} файлов, ${totalKb} КБ · JS ${jsKb} КБ · CSS ${cssKb} КБ · справочник ${dataKb} КБ`,
+)
 
 if (problems.length) {
   console.error('\nБюджет не сошёлся:')

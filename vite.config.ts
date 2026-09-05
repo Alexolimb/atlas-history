@@ -58,9 +58,28 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,json}'],
+        // Справочник в предзагрузку НЕ кладём. Там 30 файлов имён на 30 языков,
+        // это около 9 МБ — заставлять телефон качать их все при установке,
+        // чтобы человек прочитал один язык, нельзя. Вместо этого они уходят
+        // в кэш при первом обращении (правило atlas-core ниже) и после этого
+        // работают офлайн.
+        globIgnores: ['**/data/core/**'],
         navigateFallback: `${BASE}index.html`,
+        // Ядро справочника весит около мегабайта — предел по умолчанию мал.
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         runtimeCaching: [
+          {
+            // Ядро справочника: сначала кэш (данные меняются только с новой
+            // сборкой), в фоне проверяем обновление.
+            urlPattern: ({ url }) => url.pathname.includes('/data/core/'),
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'atlas-core',
+              expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             // Шрифты: после первой загрузки живут офлайн навсегда.
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
