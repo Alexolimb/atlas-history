@@ -37,7 +37,31 @@
   "path": {
     "kicker": "Path through the eras",
     "title": "From the first humans to today",
-    "sub": "Twelve eras, several chapters in each. The order is suggested, but nothing is locked: open anything, anytime."
+    "sub": "Twelve eras, several chapters in each. The order is suggested, but nothing is locked: open anything, anytime.",
+    "progress": "{{done}} of {{total}} chapters read",
+    "epochSoon": "The chapters of this era are still being written.",
+    "minutes": "{{count}} min read",
+    "englishOnly": "English for now",
+    "alreadyRead": "already read",
+    "markRead": "Mark as read",
+    "checkMe": "Test me",
+    "cards": "Cards for this chapter",
+    "seeOnGlobe": "See it on the globe: {{year}}",
+    "chapterMissing": "There is no such chapter.",
+    "epochs": {
+      "1": "First humans and the Stone Age",
+      "2": "The first civilisations",
+      "3": "The Iron Age and the first empires",
+      "4": "Classical antiquity",
+      "5": "Empires and world religions",
+      "6": "The early Middle Ages",
+      "7": "The high Middle Ages",
+      "8": "The late Middle Ages",
+      "9": "Discoveries and the Reformation",
+      "10": "Absolutism and the Enlightenment",
+      "11": "Revolutions and empires",
+      "12": "The 20th century and today"
+    }
   },
   "reference": {
     "kicker": "Reference",
@@ -186,5 +210,9 @@
     "members": "Members — {{count}}",
     "sources": "Sources",
     "sourcesNote": "Everything on this page comes from here. Any fact can be checked by following a link."
+  },
+  "quiz": {
+    "step": "Question {{current}} of {{total}}",
+    "result": "{{correct}} of {{total}} correct"
   }
 }

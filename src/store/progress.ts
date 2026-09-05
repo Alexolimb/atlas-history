@@ -48,6 +48,30 @@ export function emptyProgress(): ProgressData {
   }
 }
 
+/**
+ * Прочитан ли прогресс с устройства.
+ *
+ * Пока нет — писать НЕЛЬЗЯ. Хранилище асинхронное: в первые мгновения после
+ * запуска в памяти лежит пустой прогресс, и любая запись в этот момент
+ * стирает на устройстве всё, что человек накопил. Один такой вызов
+ * («отметить сегодняшний день») уже стёр пройденную главу при проверке.
+ */
+let hydrated = false
+
+export function markHydrated() {
+  hydrated = true
+}
+
+/** Можно ли уже писать прогресс на устройство. Вынесено ради теста. */
+export function canWriteProgress(): boolean {
+  return hydrated
+}
+
+/** Только для тестов: вернуть хранилище в состояние «ещё не прочитано». */
+export function resetHydratedForTests() {
+  hydrated = false
+}
+
 const idbStorage = {
   getItem: async (name: string): Promise<string | null> => {
     try {
@@ -57,6 +81,7 @@ const idbStorage = {
     }
   },
   setItem: async (name: string, value: string): Promise<void> => {
+    if (!canWriteProgress()) return // см. комментарий у hydrated
     try {
       await idbSet(name, value)
     } catch {
@@ -97,6 +122,9 @@ export const useProgress = create<ProgressState>()(
       name: PROGRESS_KEY,
       storage: createJSONStorage(() => idbStorage),
       version: 1,
+      // Хранилище прочитано (пусть даже с ошибкой) — с этого мгновения
+      // писать можно. До него — нет.
+      onRehydrateStorage: () => () => markHydrated(),
       partialize: (s): ProgressData => ({
         xp: s.xp,
         chaptersDone: s.chaptersDone,

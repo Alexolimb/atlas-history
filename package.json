@@ -11,12 +11,13 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "budget": "node scripts/check-budget.mjs",
-    "check": "npm run icons && npm run data:check && npm run typecheck && npm run test && npm run build && npm run budget",
+    "check": "npm run icons && npm run data:check && npm run content && npm run typecheck && npm run test && npm run build && npm run budget",
     "icons": "node scripts/make-icons.mjs",
     "data": "node scripts/data/fetch-core.mjs",
     "data:check": "node scripts/data/validate-core.mjs",
     "data:smoke": "node scripts/data/smoke.mjs",
-    "borders": "node scripts/data/fetch-borders.mjs && node scripts/data/link-borders.mjs"
+    "borders": "node scripts/data/fetch-borders.mjs && node scripts/data/link-borders.mjs",
+    "content": "node scripts/content/build-course.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",

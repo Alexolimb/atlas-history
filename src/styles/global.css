@@ -2,6 +2,7 @@
 @import './components.css';
 @import './reference.css';
 @import './globe.css';
+@import './path.css';
 
 *,
 *::before,

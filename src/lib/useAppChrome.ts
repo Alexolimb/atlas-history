@@ -43,8 +43,21 @@ export function useAppChrome() {
     document.documentElement.dir = isRtl(language) ? 'rtl' : 'ltr'
   }, [language])
 
-  // Отмечаем день захода — на этом держится серия дней.
+  /**
+   * Отмечаем день захода — на этом держится серия дней.
+   *
+   * ЖДЁМ, пока прогресс прочитается с устройства. Хранилище асинхронное:
+   * в первые мгновения после запуска в памяти лежит ПУСТОЙ прогресс, и любая
+   * запись в этот момент затирает на устройстве всё — опыт, пройденные главы,
+   * закладки. Ровно так и случилось при первой проверке: глава была пройдена,
+   * а после перехода на другой экран от неё не осталось следа.
+   */
   useEffect(() => {
-    touchToday()
+    if (useProgress.persist.hasHydrated()) {
+      touchToday()
+      return
+    }
+    const stop = useProgress.persist.onFinishHydration(() => touchToday())
+    return () => stop()
   }, [touchToday])
 }

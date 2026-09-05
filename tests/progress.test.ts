@@ -8,6 +8,9 @@ import {
   importProgress,
   emptyProgress,
   PROGRESS_FILE_MAGIC,
+  canWriteProgress,
+  markHydrated,
+  resetHydratedForTests,
 } from '@/store/progress'
 
 describe('уровни и опыт', () => {
@@ -85,5 +88,16 @@ describe('файл переноса прогресса', () => {
     expect(restored?.xp).toBe(0)
     expect(restored?.chaptersDone).toEqual(['ok'])
     expect(restored?.bookmarks).toEqual([])
+  })
+})
+
+describe('защита прогресса от затирания при запуске', () => {
+  it('до чтения с устройства писать нельзя, после — можно', () => {
+    resetHydratedForTests()
+    // Пока прогресс не прочитан, в памяти лежит пустышка. Любая запись
+    // в этот момент стёрла бы всё, что человек накопил.
+    expect(canWriteProgress()).toBe(false)
+    markHydrated()
+    expect(canWriteProgress()).toBe(true)
   })
 })
