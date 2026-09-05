@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useSettings, resolveTheme } from '@/store/settings'
 import { useProgress } from '@/store/progress'
 import { applyUiLanguage } from '@/i18n'
 import { isRtl } from '@/i18n/languages'
+import { playPageSound } from '@/lib/audio'
 
 /**
  * Одно место, где настройки становятся видимыми: тема, размер текста,
@@ -11,6 +13,10 @@ import { isRtl } from '@/i18n/languages'
  */
 export function useAppChrome() {
   const { language, theme, textSize, reducedMotion } = useSettings()
+  const pageSounds = useSettings((s) => s.pageSounds)
+  const musicVolume = useSettings((s) => s.musicVolume)
+  const location = useLocation()
+  const firstRender = useRef(true)
   const touchToday = useProgress((s) => s.touchToday)
 
   // Тема. 'system' должна переключаться на лету, если человек сменил её в устройстве.
@@ -42,6 +48,19 @@ export function useAppChrome() {
     document.documentElement.lang = language
     document.documentElement.dir = isRtl(language) ? 'rtl' : 'ltr'
   }, [language])
+
+  /**
+   * Шелест при переходе на другую страницу.
+   * На самом первом экране молчим: звук в момент открытия приложения —
+   * это неожиданно и неприятно.
+   */
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    if (pageSounds) playPageSound(musicVolume)
+  }, [location.pathname, pageSounds, musicVolume])
 
   /**
    * Отмечаем день захода — на этом держится серия дней.

@@ -235,3 +235,131 @@
   font-size: var(--fs-2xl);
   color: var(--gold);
 }
+
+/* ------------------------------ Повторение ------------------------------ */
+
+.review {
+  display: grid;
+  gap: var(--sp-4);
+  justify-items: start;
+  text-align: left;
+}
+.review__prompt {
+  margin: 0;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.review__subject {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--ink);
+  line-height: 1.2;
+}
+.review__answer {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  color: var(--gold);
+}
+.review__grades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.review-done {
+  text-align: center;
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+}
+.review-done__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--gold);
+}
+
+/* ------------------------------ Тайна дня ------------------------------ */
+
+.daily {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+  margin: var(--sp-4) 0;
+}
+.daily__title {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.daily__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  color: var(--ink);
+}
+.daily__span {
+  margin: 0;
+  color: var(--gold-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+}
+
+/* ------------------------------ Достижения ------------------------------ */
+
+.badges {
+  list-style: none;
+  margin: var(--sp-4) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--sp-3);
+}
+.badge {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: flex-start;
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  opacity: 0.6;
+}
+.badge--done {
+  opacity: 1;
+  border-color: var(--gold);
+  box-shadow: var(--glow-gold);
+}
+.badge__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  filter: grayscale(1);
+}
+.badge--done .badge__icon {
+  filter: none;
+}
+.badge__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.badge__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+.badge__hint {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+.badge__progress {
+  font-size: var(--fs-xs);
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}

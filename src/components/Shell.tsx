@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import MusicPlayer from './MusicPlayer'
 import UpdateBanner from './UpdateBanner'
 import OfflineBadge from './OfflineBadge'
 
@@ -78,6 +79,8 @@ export default function Shell({ children }: { children: ReactNode }) {
           </NavLink>
         ))}
       </nav>
+
+      <MusicPlayer />
 
       <main className="app-main">
         <OfflineBadge />

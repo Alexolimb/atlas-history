@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval'
+import { newCard, review, type Answer, type Card } from '@/lib/srs'
 
 /**
  * Прогресс человека. Живёт на устройстве, учётных записей нет.
@@ -24,6 +25,8 @@ export interface ProgressData {
   bookmarks: string[]
   /** Дни захода в формате ГГГГ-ММ-ДД, по ним считается серия. */
   daysActive: string[]
+  /** Карточки интервального повторения. */
+  cards: Card[]
   createdAt: string
 }
 
@@ -33,6 +36,10 @@ export interface ProgressState extends ProgressData {
   markEntitySeen: (qid: string) => void
   toggleBookmark: (qid: string) => void
   touchToday: (today?: string) => void
+  /** Завести карточки на повторение. Уже заведённые не трогаются. */
+  addCards: (keys: string[], today?: string) => void
+  /** Ответ на карточку: пересчитать, когда показать снова. */
+  answerCard: (key: string, answer: Answer, today?: string) => void
   replaceAll: (data: ProgressData) => void
   reset: () => void
 }
@@ -44,6 +51,7 @@ export function emptyProgress(): ProgressData {
     entitiesSeen: [],
     bookmarks: [],
     daysActive: [],
+    cards: [],
     createdAt: new Date().toISOString(),
   }
 }
@@ -115,6 +123,16 @@ export const useProgress = create<ProgressState>()(
         })),
       touchToday: (today = isoDay()) =>
         set((s) => ({ daysActive: addUnique(s.daysActive, today) })),
+      addCards: (keys, today = isoDay()) =>
+        set((s) => {
+          const known = new Set(s.cards.map((c) => c.key))
+          const fresh = keys.filter((key) => !known.has(key)).map((key) => newCard(key, today))
+          return fresh.length ? { cards: [...s.cards, ...fresh] } : {}
+        }),
+      answerCard: (key, answer, today = isoDay()) =>
+        set((s) => ({
+          cards: s.cards.map((card) => (card.key === key ? review(card, answer, today) : card)),
+        })),
       replaceAll: (data) => set({ ...data }),
       reset: () => set({ ...emptyProgress() }),
     }),
@@ -131,6 +149,7 @@ export const useProgress = create<ProgressState>()(
         entitiesSeen: s.entitiesSeen,
         bookmarks: s.bookmarks,
         daysActive: s.daysActive,
+        cards: s.cards,
         createdAt: s.createdAt,
       }),
     },
@@ -198,12 +217,28 @@ export function importProgress(raw: unknown): ProgressData | null {
   const strings = (v: unknown): string[] =>
     Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []
 
+  const readCards = (v: unknown): Card[] => {
+    if (!Array.isArray(v)) return []
+    return v.filter(
+      (c): c is Card =>
+        typeof c === 'object' &&
+        c !== null &&
+        typeof (c as Card).key === 'string' &&
+        typeof (c as Card).due === 'string' &&
+        typeof (c as Card).ease === 'number' &&
+        typeof (c as Card).interval === 'number',
+    )
+  }
+
   return {
     xp: typeof d.xp === 'number' && Number.isFinite(d.xp) ? Math.max(0, d.xp) : 0,
     chaptersDone: strings(d.chaptersDone),
     entitiesSeen: strings(d.entitiesSeen),
     bookmarks: strings(d.bookmarks),
     daysActive: strings(d.daysActive),
+    // Файл, сохранённый до появления повторения, карточек не содержит —
+    // читаем его как есть, а не отвергаем.
+    cards: readCards(d.cards),
     createdAt: typeof d.createdAt === 'string' ? d.createdAt : new Date().toISOString(),
   }
 }

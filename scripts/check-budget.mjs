@@ -26,6 +26,7 @@ const BUDGETS = {
   coreSingleKb: 1500,
   bordersTotalKb: 5120, // 52 карты мира
   bordersSingleKb: 260, // одна карта: её тянут по мобильной сети
+  audioTotalKb: 12288, // вся музыка вместе, из docs/ПЛАН.md §5
 }
 
 if (!existsSync(DIST)) {
@@ -50,6 +51,7 @@ const slash = (p) => p.split('\\').join('/')
 
 const isCore = (f) => slash(f.path).includes('data/core/')
 const isBorders = (f) => slash(f.path).includes('data/borders/')
+const isAudio = (f) => slash(f.path).startsWith('audio/')
 const isData = (f) => isCore(f) || isBorders(f)
 
 /** Что перечислено в index.html — то и грузится при открытии. */
@@ -83,6 +85,7 @@ if (firstJsKb > BUDGETS.firstLoadJsKb) {
 if (cssKb > BUDGETS.cssTotalKb) problems.push(`CSS ${cssKb} КБ > ${BUDGETS.cssTotalKb} КБ`)
 
 for (const f of files) {
+  if (isAudio(f)) continue // музыка проверяется общим весом, а не поштучно
   const limit = isBorders(f)
     ? BUDGETS.bordersSingleKb
     : isCore(f)
@@ -97,6 +100,9 @@ if (coreKb > BUDGETS.coreTotalKb) problems.push(`справочник ${coreKb} 
 if (bordersKb > BUDGETS.bordersTotalKb) {
   problems.push(`карты границ ${bordersKb} КБ > ${BUDGETS.bordersTotalKb} КБ`)
 }
+
+const audioKb = kb(files.filter(isAudio).reduce((a, f) => a + f.bytes, 0))
+if (audioKb > BUDGETS.audioTotalKb) problems.push(`музыка ${audioKb} КБ > ${BUDGETS.audioTotalKb} КБ`)
 
 // Пустые данные в сборке — та же неправда, что и неверные данные.
 const coreCount = files.filter(isCore).length
@@ -115,7 +121,7 @@ for (const icon of ['icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-mask
 console.log(`Сборка: ${files.length} файлов, ${totalKb} КБ`)
 console.log(`  первая загрузка: JS ${firstJsKb} КБ, CSS ${cssKb} КБ`)
 console.log(`  по требованию: ещё ${Math.round(allJsKb - firstJsKb)} КБ кода (глобус)`)
-console.log(`  данные: справочник ${coreKb} КБ, карты ${bordersKb} КБ`)
+console.log(`  данные: справочник ${coreKb} КБ, карты ${bordersKb} КБ, музыка ${audioKb} КБ`)
 
 if (problems.length) {
   console.error('\nБюджет не сошёлся:')

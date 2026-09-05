@@ -85,7 +85,23 @@
   "review": {
     "kicker": "Review",
     "title": "Come back to what fades",
-    "sub": "The app returns a fact to you exactly when it starts slipping out of memory."
+    "sub": "The app returns a fact to you exactly when it starts slipping out of memory.",
+    "empty": "Nothing to review yet. Open a few cards in the reference and they will show up here exactly when they start slipping away.",
+    "allDone": "That is all for today",
+    "comeBack": "Come back tomorrow: the cards return on their own when their time comes.",
+    "stats": "Cards in total: {{total}} · chapters read: {{chapters}} · reviewed today: {{reviewed}}",
+    "left": "Cards left: {{count}}",
+    "reveal": "Show the answer",
+    "forgot": "Forgot",
+    "hard": "With effort",
+    "easy": "Easily",
+    "openCard": "Open the full card",
+    "q": {
+      "birth": "In what year was this person born?",
+      "death": "In what year did this person die?",
+      "start": "In what year did it appear?",
+      "end": "In what year did it end?"
+    }
   },
   "profile": {
     "kicker": "Profile",
@@ -214,5 +230,63 @@
   "quiz": {
     "step": "Question {{current}} of {{total}}",
     "result": "{{correct}} of {{total}} correct"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "earned": "{{done}} of {{total}} earned",
+    "firstChapter": {
+      "name": "First chapter",
+      "hint": "Read one chapter of the path"
+    },
+    "fiveChapters": {
+      "name": "Hooked",
+      "hint": "Read five chapters"
+    },
+    "epoch": {
+      "name": "Through the eras",
+      "hint": "Read twelve chapters"
+    },
+    "curious": {
+      "name": "Curious",
+      "hint": "Open ten reference cards"
+    },
+    "explorer": {
+      "name": "Explorer",
+      "hint": "Open fifty cards"
+    },
+    "cartographer": {
+      "name": "Cartographer",
+      "hint": "Open two hundred cards"
+    },
+    "streak3": {
+      "name": "Three days running",
+      "hint": "Come back three days in a row"
+    },
+    "streak7": {
+      "name": "A week",
+      "hint": "Come back seven days in a row"
+    },
+    "streak30": {
+      "name": "A month",
+      "hint": "Come back thirty days in a row"
+    },
+    "level2": {
+      "name": "Level two",
+      "hint": "Earn 500 XP"
+    },
+    "level5": {
+      "name": "Level five",
+      "hint": "Earn 2000 XP"
+    },
+    "collector": {
+      "name": "Collector",
+      "hint": "Make ten bookmarks"
+    }
+  },
+  "daily": {
+    "title": "Mystery of the day",
+    "hint": "One card for today — tomorrow it will be another.",
+    "reveal": "Who is this?",
+    "open": "Open"
   }
 }

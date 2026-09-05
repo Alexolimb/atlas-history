@@ -66,12 +66,11 @@ export default function SettingsScreen() {
         <Toggle checked={s.globe3d} onChange={s.setGlobe3d} label={t('settings.globe3d.title')} />
       </Section>
 
-      <Section title={t('settings.music.title')} sub={t('settings.music.sub')} soon="Часть 7">
+      <Section title={t('settings.music.title')} sub={t('settings.music.sub')}>
         <Toggle
           checked={s.musicOn}
           onChange={s.setMusicOn}
           label={t('settings.music.title')}
-          disabled
         />
         <label className="slider">
           <span>{t('settings.music.volume')}</span>
@@ -81,17 +80,15 @@ export default function SettingsScreen() {
             max={100}
             value={Math.round(s.musicVolume * 100)}
             onChange={(e) => s.setMusicVolume(Number(e.target.value) / 100)}
-            disabled
           />
         </label>
       </Section>
 
-      <Section title={t('settings.sound.title')} sub={t('settings.sound.sub')} soon="Часть 7">
+      <Section title={t('settings.sound.title')} sub={t('settings.sound.sub')}>
         <Toggle
           checked={s.pageSounds}
           onChange={s.setPageSounds}
           label={t('settings.sound.title')}
-          disabled
         />
       </Section>
 
@@ -124,6 +121,7 @@ function ProgressSection() {
       entitiesSeen: progress.entitiesSeen,
       bookmarks: progress.bookmarks,
       daysActive: progress.daysActive,
+      cards: progress.cards,
       createdAt: progress.createdAt,
     })
     const blob = new Blob([JSON.stringify(file, null, 2)], { type: 'application/json' })
