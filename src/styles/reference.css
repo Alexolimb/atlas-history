@@ -1,0 +1,395 @@
+/* Справочник: поиск, списки, карточка, древо, лента правителей. */
+
+/* ---------------------------- Поиск и фильтры ---------------------------- */
+
+.search {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: var(--sp-2) 0 var(--sp-4);
+  background: linear-gradient(var(--bg) 70%, transparent);
+}
+.search__input {
+  max-width: none;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-5);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 34px;
+  padding: 0 var(--sp-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--ink-dim);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.chip:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+  text-decoration: none;
+}
+.chip--button[aria-pressed='true'] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #14100a;
+  font-weight: 600;
+}
+
+/* ------------------------------ Список находок ------------------------------ */
+
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.result {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+.result:hover {
+  text-decoration: none;
+  border-color: var(--line);
+  background: var(--surface-2);
+}
+.result__main {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.result__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--ink);
+}
+.result__years {
+  font-size: var(--fs-sm);
+  color: var(--gold);
+  white-space: nowrap;
+}
+.result__descr {
+  font-size: var(--fs-sm);
+  color: var(--ink-dim);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.result__meta {
+  display: flex;
+  gap: var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+.result__net {
+  color: var(--accent-cool);
+}
+
+/* ------------------------------ Карточка ------------------------------ */
+
+.back-link {
+  border: 0;
+  background: none;
+  color: var(--ink-mute);
+  font-size: var(--fs-sm);
+  padding: var(--sp-2) 0;
+  margin-bottom: var(--sp-2);
+}
+.back-link:hover {
+  color: var(--gold);
+}
+
+.entity__head {
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: start;
+  margin-bottom: var(--sp-5);
+}
+.entity__kind {
+  margin: 0;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.entity__span {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  color: var(--gold-soft);
+}
+.entity__descr {
+  margin: 0;
+  color: var(--ink-dim);
+  max-width: 62ch;
+}
+
+.entity-image {
+  margin: 0 0 var(--sp-5);
+}
+.entity-image img {
+  /* contain, а не cover: среди картинок и портреты, и флаги, и карты.
+     Обрезка по центру у вертикального портрета отрезает голову — буквально. */
+  width: 100%;
+  max-height: 440px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line-soft);
+  background: var(--surface-2);
+  padding: var(--sp-2);
+}
+.entity-image figcaption {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+
+.entity__section {
+  margin-bottom: var(--sp-6);
+}
+.entity__section-title {
+  font-size: var(--fs-lg);
+  font-family: var(--font-display);
+  color: var(--ink);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line);
+}
+.entity__extract {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-loose);
+  color: var(--ink-dim);
+  max-width: 66ch;
+}
+.entity__sources {
+  margin-top: var(--sp-7);
+  padding-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+}
+
+/* ------------------------------ Ссылки на карточки ------------------------------ */
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.entity-link {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--dur) var(--ease);
+}
+.entity-link:hover {
+  text-decoration: none;
+  border-color: var(--gold);
+}
+.entity-link__name {
+  font-size: var(--fs-sm);
+}
+.entity-link__net {
+  color: var(--accent-cool);
+  margin-left: var(--sp-1);
+  font-size: var(--fs-xs);
+}
+.entity-link__note {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-2);
+}
+.plain-list li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.plain-list__where {
+  color: var(--ink-mute);
+  font-size: var(--fs-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* ------------------------------ Лента правителей ------------------------------ */
+
+.timeline {
+  display: grid;
+  gap: 0;
+  border-left: 2px solid var(--line);
+  padding-left: var(--sp-4);
+}
+.timeline__row {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr;
+  gap: var(--sp-4);
+  padding: var(--sp-3) var(--sp-3) var(--sp-3) 0;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-soft);
+  position: relative;
+  transition: background var(--dur) var(--ease);
+}
+.timeline__row:hover {
+  text-decoration: none;
+  background: var(--surface);
+}
+.timeline__row::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--sp-4) * -1 - 5px);
+  top: calc(var(--sp-3) + 8px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.timeline__years {
+  font-size: var(--fs-sm);
+  color: var(--gold);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.timeline__body {
+  display: grid;
+  gap: 2px;
+}
+.timeline__name {
+  color: var(--ink);
+}
+.timeline__role {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+.timeline__undated {
+  margin-top: var(--sp-4);
+  display: grid;
+  gap: var(--sp-2);
+}
+.timeline__undated-label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+}
+.timeline__undated-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+/* ------------------------------ Семейное древо ------------------------------ */
+
+.tree {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+}
+.tree__row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+.tree__row--self {
+  padding: var(--sp-2) 0;
+}
+.tree__link--down {
+  width: 2px;
+  height: var(--sp-5);
+  background: var(--line);
+}
+.tree__person {
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  text-align: center;
+  min-width: 130px;
+  max-width: 190px;
+  padding: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color var(--dur) var(--ease);
+}
+.tree__person:hover {
+  text-decoration: none;
+  border-color: var(--gold);
+}
+.tree__person--self {
+  border-color: var(--gold);
+  background: var(--surface-2);
+  box-shadow: var(--glow-gold);
+}
+.tree__person--compact {
+  min-width: 0;
+  padding: var(--sp-2) var(--sp-3);
+}
+.tree__name {
+  font-size: var(--fs-sm);
+  line-height: 1.3;
+}
+.tree__years {
+  font-size: var(--fs-xs);
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.tree__role {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+.tree__siblings {
+  margin-top: var(--sp-5);
+  display: grid;
+  gap: var(--sp-2);
+  justify-items: center;
+}
+.tree__siblings-label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+}

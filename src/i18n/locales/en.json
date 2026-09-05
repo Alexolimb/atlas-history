@@ -24,7 +24,21 @@
   "reference": {
     "kicker": "Reference",
     "title": "Countries, people, events",
-    "sub": "Every state and empire, rulers, dynasties and family trees. Every fact carries a link to its source."
+    "sub": "Every state and empire, rulers, dynasties and family trees. Every fact carries a link to its source.",
+    "searchPlaceholder": "A country, a person, a war, a dynasty…",
+    "searchingWeb": "Also searching Wikidata…",
+    "nothingFound": "Nothing found. Try another spelling.",
+    "noBookmarks": "No bookmarks yet. Open a card and press “Bookmark”.",
+    "browseNote": "{{count}} cards live on this device and open without the internet. Everything else loads from Wikidata.",
+    "fromWeb": "from the web",
+    "filter": {
+      "all": "All",
+      "state": "States",
+      "person": "People",
+      "event": "Events",
+      "dynasty": "Dynasties",
+      "bookmarks": "Bookmarks"
+    }
   },
   "review": {
     "kicker": "Review",
@@ -116,6 +130,43 @@
     "updateAction": "Update",
     "installTitle": "Install Atlas as an app",
     "installAction": "Install",
-    "installLater": "Later"
+    "installLater": "Later",
+    "loading": "Loading…"
+  },
+  "entity": {
+    "kind": {
+      "state": "State",
+      "person": "Person",
+      "event": "Event",
+      "dynasty": "Dynasty"
+    },
+    "notFound": "Card {{id}} was found neither on this device nor online.",
+    "openWikidata": "Open in Wikidata",
+    "bookmark": "Bookmark",
+    "bookmarked": "★ Bookmarked",
+    "readMore": "Read the whole article",
+    "textLicence": "Wikipedia text, {{licence}}",
+    "noArticle": "There is no article in your language. Showing what Wikidata knows.",
+    "rulers": {
+      "title": "Rulers and office-holders — {{count}}",
+      "undated": "Reign dates unknown"
+    },
+    "before": "What came before",
+    "after": "What came after",
+    "positions": "Positions held",
+    "dynasty": "Dynasty",
+    "family": {
+      "title": "Family",
+      "parent": "parent",
+      "spouse": "spouse",
+      "child": "child",
+      "siblings": "Brothers and sisters"
+    },
+    "country": "Country",
+    "partOf": "Part of",
+    "participants": "Participants",
+    "members": "Members — {{count}}",
+    "sources": "Sources",
+    "sourcesNote": "Everything on this page comes from here. Any fact can be checked by following a link."
   }
 }
