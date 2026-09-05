@@ -1,0 +1,170 @@
+/* Главный экран: глобус, ползунок времени, выбранная страна. */
+
+.globe-screen {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.globe-stage {
+  /* Размер задаётся ТОЛЬКО отсюда. Глобус лежит внутри absolute-слоем и
+     не может раздвинуть родителя: иначе canvas растёт → контейнер растёт →
+     canvas растёт ещё, и страница уезжает за край экрана. */
+  position: relative;
+  aspect-ratio: 1 / 1;
+  max-height: 62vh;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 50% 20%, rgba(212, 175, 55, 0.09), transparent 60%),
+    var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  display: grid;
+  place-items: center;
+}
+
+.globe {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.globe canvas {
+  display: block;
+  max-width: 100%;
+  /* Палец крутит глобус, а страница при этом не должна ездить. */
+  touch-action: none;
+}
+
+.globe-stage__loading,
+.globe-stage__fallback {
+  position: absolute;
+  bottom: var(--sp-3);
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-4);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+.globe-stage__fallback {
+  position: static;
+  transform: none;
+}
+
+/* ------------------------------ Плоская карта ------------------------------ */
+
+.flatmap {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.flatmap__ocean {
+  fill: var(--bg-deep);
+}
+.flatmap__land {
+  stroke: rgba(242, 234, 216, 0.28);
+  stroke-width: 0.2;
+  cursor: pointer;
+  transition: fill var(--dur) var(--ease);
+}
+.flatmap__land:hover {
+  fill: var(--gold-soft) !important;
+}
+.flatmap__land--selected {
+  stroke: var(--gold);
+  stroke-width: 0.5;
+}
+
+/* ------------------------------ Ползунок времени ------------------------------ */
+
+.timebar {
+  display: grid;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+}
+.timebar__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+.timebar__year {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  color: var(--gold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.timebar__count {
+  font-size: var(--fs-sm);
+  color: var(--ink-mute);
+}
+
+.timebar__slider {
+  width: 100%;
+  accent-color: var(--gold);
+  /* Ползунок тянут пальцем — делаем его крупным. */
+  height: 32px;
+}
+
+.timebar__buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.timebar__marks {
+  flex: 1;
+  display: flex;
+  gap: var(--sp-2);
+  overflow-x: auto;
+  padding-bottom: var(--sp-1);
+  scrollbar-width: thin;
+}
+.timebar__marks .chip {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+/* ------------------------------ Выбранная страна ------------------------------ */
+
+.globe-pick {
+  display: grid;
+  gap: var(--sp-3);
+  justify-items: start;
+}
+.globe-pick__name {
+  font-size: var(--fs-xl);
+  font-family: var(--font-display);
+}
+.globe-hint {
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .globe-screen {
+    grid-template-columns: 1fr minmax(280px, 360px);
+    align-items: start;
+  }
+  .globe-screen > .page-head,
+  .globe-screen > .globe-stage {
+    grid-column: 1;
+  }
+  .globe-stage {
+    aspect-ratio: 4 / 3;
+    max-height: 70vh;
+  }
+  .timebar,
+  .globe-pick,
+  .globe-hint,
+  .globe-screen > .note {
+    grid-column: 2;
+  }
+}

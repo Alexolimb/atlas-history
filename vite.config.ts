@@ -63,7 +63,7 @@ export default defineConfig({
         // чтобы человек прочитал один язык, нельзя. Вместо этого они уходят
         // в кэш при первом обращении (правило atlas-core ниже) и после этого
         // работают офлайн.
-        globIgnores: ['**/data/core/**'],
+        globIgnores: ['**/data/core/**', '**/data/borders/**'],
         navigateFallback: `${BASE}index.html`,
         // Ядро справочника весит около мегабайта — предел по умолчанию мал.
         maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
@@ -72,11 +72,11 @@ export default defineConfig({
           {
             // Ядро справочника: сначала кэш (данные меняются только с новой
             // сборкой), в фоне проверяем обновление.
-            urlPattern: ({ url }) => url.pathname.includes('/data/core/'),
+            urlPattern: ({ url }) => url.pathname.includes('/data/'),
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'atlas-core',
-              expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              expiration: { maxEntries: 120, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

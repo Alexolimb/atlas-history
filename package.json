@@ -15,7 +15,8 @@
     "icons": "node scripts/make-icons.mjs",
     "data": "node scripts/data/fetch-core.mjs",
     "data:check": "node scripts/data/validate-core.mjs",
-    "data:smoke": "node scripts/data/smoke.mjs"
+    "data:smoke": "node scripts/data/smoke.mjs",
+    "borders": "node scripts/data/fetch-borders.mjs && node scripts/data/link-borders.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
@@ -23,11 +24,14 @@
     "idb-keyval": "^6.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-globe.gl": "^2.38.0",
     "react-i18next": "^15.1.3",
     "react-router-dom": "^7.0.2",
+    "three": "^0.185.1",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^26.4.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

@@ -14,7 +14,25 @@
   "globe": {
     "kicker": "Map of time",
     "title": "The whole world, any year",
-    "sub": "Drag the slider from −10000 to today: states of that era light up on the globe. Tap any one to open its history."
+    "sub": "Drag the slider from −10000 to today: states of that era light up on the globe. Tap any one to open its history.",
+    "countries": "{{count}} countries on the map",
+    "sliderLabel": "Year on the map",
+    "earlier": "Earlier",
+    "later": "Later",
+    "openCard": "Open the card",
+    "noCard": "There is no card for this country yet. Look it up by name in the reference.",
+    "subjectTo": "Subject to: {{of}}",
+    "hint": "Tap a country on the map to learn more about it.",
+    "bordersNote": "Borders are approximate: the older the map, the more tentative the lines.",
+    "marks": {
+      "ancient": "Antiquity",
+      "rome": "Rome",
+      "middle": "Middle Ages",
+      "discovery": "Discoveries",
+      "empires": "Empires",
+      "wars": "Wars",
+      "today": "Today"
+    }
   },
   "path": {
     "kicker": "Path through the eras",

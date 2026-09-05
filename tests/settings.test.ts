@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { clamp01, resolveTheme, defaultSettings } from '@/store/settings'
+import { clamp01, resolveTheme, defaultSettings, guessGlobe3d } from '@/store/settings'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -38,5 +38,41 @@ describe('настройки', () => {
   it('устройство без matchMedia не роняет приложение', () => {
     vi.stubGlobal('window', {})
     expect(resolveTheme('system')).toBe('dark')
+  })
+})
+
+describe('объёмный глобус по умолчанию', () => {
+  const withNav = (nav: Record<string, unknown>) => {
+    vi.stubGlobal('navigator', nav)
+  }
+
+  it('на обычном устройстве включён', () => {
+    withNav({ deviceMemory: 8, hardwareConcurrency: 8, connection: { effectiveType: '4g' } })
+    expect(guessGlobe3d()).toBe(true)
+  })
+
+  it('на слабом по памяти — выключен', () => {
+    withNav({ deviceMemory: 2, hardwareConcurrency: 8 })
+    expect(guessGlobe3d()).toBe(false)
+  })
+
+  it('на слабом по ядрам — выключен', () => {
+    withNav({ deviceMemory: 8, hardwareConcurrency: 2 })
+    expect(guessGlobe3d()).toBe(false)
+  })
+
+  it('в режиме экономии трафика — выключен', () => {
+    withNav({ deviceMemory: 8, hardwareConcurrency: 8, connection: { saveData: true } })
+    expect(guessGlobe3d()).toBe(false)
+  })
+
+  it('на медленной сети — выключен', () => {
+    withNav({ deviceMemory: 8, hardwareConcurrency: 8, connection: { effectiveType: '2g' } })
+    expect(guessGlobe3d()).toBe(false)
+  })
+
+  it('устройство, которое ничего о себе не говорит, получает глобус', () => {
+    withNav({})
+    expect(guessGlobe3d()).toBe(true)
   })
 })
