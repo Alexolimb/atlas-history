@@ -24,7 +24,6 @@ export default function SettingsScreen() {
           {LANGUAGES.map((l) => (
             <option key={l.code} value={l.code}>
               {l.name}
-              {l.uiReady ? '' : ` — ${t('settings.language.uiFallback')}`}
             </option>
           ))}
         </select>

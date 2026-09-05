@@ -123,8 +123,7 @@
     "title": "However suits you",
     "language": {
       "title": "Language",
-      "sub": "One choice sets both the menus and the language of names and descriptions in the reference.",
-      "uiFallback": "interface still in English"
+      "sub": "One choice sets both the menus and the language of names and descriptions in the reference."
     },
     "theme": {
       "title": "Theme",

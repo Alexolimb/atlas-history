@@ -44,7 +44,7 @@ export function useAppChrome() {
   }, [reducedMotion])
 
   useEffect(() => {
-    applyUiLanguage(language)
+    void applyUiLanguage(language)
     document.documentElement.lang = language
     document.documentElement.dir = isRtl(language) ? 'rtl' : 'ltr'
   }, [language])

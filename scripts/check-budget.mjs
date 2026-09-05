@@ -27,6 +27,7 @@ const BUDGETS = {
   bordersTotalKb: 5120, // 52 карты мира
   bordersSingleKb: 260, // одна карта: её тянут по мобильной сети
   audioTotalKb: 12288, // вся музыка вместе, из docs/ПЛАН.md §5
+  localesTotalKb: 700, // 28 языков интерфейса, каждый грузится отдельно
 }
 
 if (!existsSync(DIST)) {
@@ -52,6 +53,7 @@ const slash = (p) => p.split('\\').join('/')
 const isCore = (f) => slash(f.path).includes('data/core/')
 const isBorders = (f) => slash(f.path).includes('data/borders/')
 const isAudio = (f) => slash(f.path).startsWith('audio/')
+const isLocale = (f) => slash(f.path).startsWith('locales/')
 const isData = (f) => isCore(f) || isBorders(f)
 
 /** Что перечислено в index.html — то и грузится при открытии. */
@@ -85,7 +87,7 @@ if (firstJsKb > BUDGETS.firstLoadJsKb) {
 if (cssKb > BUDGETS.cssTotalKb) problems.push(`CSS ${cssKb} КБ > ${BUDGETS.cssTotalKb} КБ`)
 
 for (const f of files) {
-  if (isAudio(f)) continue // музыка проверяется общим весом, а не поштучно
+  if (isAudio(f) || isLocale(f)) continue // проверяются общим весом, а не поштучно
   const limit = isBorders(f)
     ? BUDGETS.bordersSingleKb
     : isCore(f)
@@ -104,6 +106,13 @@ if (bordersKb > BUDGETS.bordersTotalKb) {
 const audioKb = kb(files.filter(isAudio).reduce((a, f) => a + f.bytes, 0))
 if (audioKb > BUDGETS.audioTotalKb) problems.push(`музыка ${audioKb} КБ > ${BUDGETS.audioTotalKb} КБ`)
 
+const localeFiles = files.filter(isLocale)
+const localesKb = kb(localeFiles.reduce((a, f) => a + f.bytes, 0))
+if (localesKb > BUDGETS.localesTotalKb) {
+  problems.push(`языки интерфейса ${localesKb} КБ > ${BUDGETS.localesTotalKb} КБ`)
+}
+if (localeFiles.length < 28) problems.push(`языков интерфейса только ${localeFiles.length}, ожидали 28`)
+
 // Пустые данные в сборке — та же неправда, что и неверные данные.
 const coreCount = files.filter(isCore).length
 const borderCount = files.filter(isBorders).length
@@ -121,7 +130,9 @@ for (const icon of ['icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-mask
 console.log(`Сборка: ${files.length} файлов, ${totalKb} КБ`)
 console.log(`  первая загрузка: JS ${firstJsKb} КБ, CSS ${cssKb} КБ`)
 console.log(`  по требованию: ещё ${Math.round(allJsKb - firstJsKb)} КБ кода (глобус)`)
-console.log(`  данные: справочник ${coreKb} КБ, карты ${bordersKb} КБ, музыка ${audioKb} КБ`)
+console.log(
+  `  данные: справочник ${coreKb} КБ, карты ${bordersKb} КБ, языки ${localesKb} КБ, музыка ${audioKb} КБ`,
+)
 
 if (problems.length) {
   console.error('\nБюджет не сошёлся:')

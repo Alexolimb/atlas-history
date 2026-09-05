@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { LANGUAGES, LANG_CODES, uiLanguage, isRtl, getLanguage } from '@/i18n/languages'
+import { LANGUAGES, LANG_CODES, hasUi, isRtl, getLanguage } from '@/i18n/languages'
 import ru from '@/i18n/locales/ru.json'
 import en from '@/i18n/locales/en.json'
 
@@ -12,8 +12,9 @@ describe('список языков', () => {
     expect(new Set(LANG_CODES).size).toBe(LANG_CODES.length)
   })
 
-  it('русский и английский готовы, остальные ждут части 8', () => {
-    expect(LANGUAGES.filter((l) => l.uiReady).map((l) => l.code)).toEqual(['ru', 'en'])
+  it('интерфейс переведён на все тридцать', () => {
+    expect(LANGUAGES.filter((l) => !l.uiReady)).toEqual([])
+    expect(LANG_CODES.every((code) => hasUi(code))).toBe(true)
   })
 
   it('языки справа налево помечены', () => {
@@ -23,11 +24,8 @@ describe('список языков', () => {
     expect(isRtl('ru')).toBe(false)
   })
 
-  it('язык без перевода интерфейса падает на английский, а не ломается', () => {
-    expect(uiLanguage('ru')).toBe('ru')
-    expect(uiLanguage('en')).toBe('en')
-    expect(uiLanguage('th')).toBe('en')
-    expect(uiLanguage('нет-такого')).toBe('en')
+  it('несуществующий язык не считается переведённым', () => {
+    expect(hasUi('нет-такого')).toBe(false)
   })
 
   it('getLanguage не выдумывает несуществующие языки', () => {

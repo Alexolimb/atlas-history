@@ -43,7 +43,6 @@ describe('ключи, на которые смотрит каркас', () => {
     'common.updateReady',
     'common.updateAction',
     'settings.language.title',
-    'settings.language.uiFallback',
     'settings.theme.dark',
     'settings.theme.light',
     'settings.theme.system',

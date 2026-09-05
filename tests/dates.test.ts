@@ -102,3 +102,44 @@ describe('ссылки на источники', () => {
     expect(commonsImageUrl('Caesar.jpg', 320)).toContain('width=320')
   })
 })
+
+describe('даты на остальных 28 языках', () => {
+  it('японский пишет «до нашей эры» по-своему, а не по-английски', () => {
+    const out = formatHistDate(d(-44, 11, 3, 15), 'ja')
+    expect(out).toContain('紀元前')
+    expect(out).not.toContain('BC')
+  })
+
+  it('арабский и иврит тоже получают свою эру', () => {
+    expect(formatHistDate(d(-44), 'ar')).toContain('ق.م')
+    expect(formatHistDate(d(-44), 'he')).toContain('לפנה')
+  })
+
+  it('тайский показывает год нашей эры, а не буддийский', () => {
+    // По умолчанию тайская локаль прибавляет 543 года. Для приложения,
+    // где всюду «−44» и «1789», это выглядело бы как ошибка в данных.
+    expect(formatHistDate(d(1789), 'th')).toContain('1789')
+    expect(formatHistDate(d(1789), 'th')).not.toContain('2332')
+  })
+
+  it('цифры везде обычные, а не местные', () => {
+    for (const lang of ['ar', 'fa', 'hi', 'bn', 'th']) {
+      expect(formatHistDate(d(1789), lang), lang).toMatch(/1789/)
+    }
+  })
+
+  it('неточная дата помечается «примерно», а не выдаётся за точную', () => {
+    expect(formatHistDate(d(-3000, 6), 'de')).toContain('≈')
+    expect(formatHistDate(d(1789), 'de')).not.toContain('≈')
+  })
+
+  it('неизвестный язык не роняет экран', () => {
+    expect(formatHistDate(d(1789), 'нет-такого')).toBeTruthy()
+  })
+
+  it('год без месяца не выдумывает январь', () => {
+    const out = formatHistDate(d(1789), 'ja')
+    expect(out).toContain('1789')
+    expect(out).not.toContain('1月')
+  })
+})

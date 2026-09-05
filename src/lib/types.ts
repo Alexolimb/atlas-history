@@ -121,11 +121,53 @@ export function commonsFilePage(file: string): string {
 }
 
 /**
- * Дата человеческими словами, с учётом того, что мы её знаем неточно.
- * «около 3000 до н. э.», «I век», «1789».
+ * Дата человеческими словами, на языке человека.
+ *
+ * Русский и английский написаны вручную: у них есть свои привычные обороты
+ * («5 век до н. э.», «1920-е»), которые машинный формат не даёт.
+ * Остальные 28 языков форматирует сам браузер — он знает, что «до нашей эры»
+ * по-японски будет 紀元前, а на иврите לפנה״ס, и делает это правильнее,
+ * чем вышло бы у меня по словарю.
+ *
+ * Календарь всюду принудительно григорианский, а цифры — обычные. Иначе,
+ * например, тайский по умолчанию покажет буддийский год, и человек увидит
+ * «500» там, где во всём остальном приложении стоит «−44».
  */
 export function formatHistDate(date: HistDate | undefined, lang: string): string {
   if (!date) return ''
+  if (lang === 'ru' || lang === 'en') return formatRuEn(date, lang)
+  return formatIntl(date, lang)
+}
+
+/** Форматирование средствами браузера — для всех языков, кроме ru и en. */
+function formatIntl(date: HistDate, lang: string): string {
+  const base = { calendar: 'gregory', numberingSystem: 'latn', timeZone: 'UTC' } as const
+
+  // Год в JavaScript: 1 год до н. э. — это 0, 44 до н. э. — это −43.
+  const jsYear = date.year <= 0 ? date.year + 1 : date.year
+  const value = new Date(Date.UTC(2000, date.month ? date.month - 1 : 0, date.day ?? 1))
+  value.setUTCFullYear(jsYear)
+
+  const era = date.year <= 0 ? { era: 'short' as const } : {}
+
+  try {
+    if (date.precision >= 11 && date.day && date.month) {
+      return new Intl.DateTimeFormat(lang, { ...base, ...era, year: 'numeric', month: 'long', day: 'numeric' }).format(value)
+    }
+    if (date.precision >= 10 && date.month) {
+      return new Intl.DateTimeFormat(lang, { ...base, ...era, year: 'numeric', month: 'long' }).format(value)
+    }
+    const year = new Intl.DateTimeFormat(lang, { ...base, ...era, year: 'numeric' }).format(value)
+    // Точность ниже года — честно помечаем, что это примерно.
+    return date.precision < 9 ? `≈ ${year}` : year
+  } catch {
+    // Неизвестный язык — лучше английская дата, чем пустое место.
+    return formatRuEn(date, 'en')
+  }
+}
+
+/** Русский и английский: свои обороты для веков, десятилетий и тысячелетий. */
+function formatRuEn(date: HistDate, lang: string): string {
   const bc = date.year < 0
   const year = Math.abs(date.year)
   const ru = lang === 'ru'
@@ -147,39 +189,21 @@ export function formatHistDate(date: HistDate | undefined, lang: string): string
     if (date.precision >= 11 && date.day) {
       return ru ? `${date.day} ${monthName} ${year}${era}` : `${monthName} ${date.day}, ${year}${era}`
     }
-    return ru ? `${monthName} ${year}${era}` : `${monthName} ${year}${era}`
+    return `${monthName} ${year}${era}`
   }
   return `${year}${era}`
 }
 
+
+/** Месяцы в родительном падеже: «14 июля», а не «14 июль». */
 const MONTHS = {
   ru: [
-    'января',
-    'февраля',
-    'марта',
-    'апреля',
-    'мая',
-    'июня',
-    'июля',
-    'августа',
-    'сентября',
-    'октября',
-    'ноября',
-    'декабря',
+    'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+    'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря',
   ],
   en: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
   ],
 } as const
 
