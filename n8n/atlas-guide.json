@@ -1,0 +1,115 @@
+{
+  "name": "atlas-guide (гид приложения Atlas)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "atlas/v1/guide",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-atlas-guide",
+      "name": "Вход из приложения",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-460, 0],
+      "webhookId": "atlas-guide"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Проверка запроса и сборка задания для модели.\n//\n// Гид отвечает ТОЛЬКО по тому тексту, который человек уже видит на экране.\n// Это главное правило: если разрешить ему отвечать из собственной памяти,\n// приложение превратится в «спроси у модели», а проверенный справочник\n// станет не нужен. И модель начнёт врать про даты — ровно то, чего\n// Алексей просил не допустить.\n\nconst body = $input.first().json.body ?? $input.first().json;\n\nconst intent = String(body.intent ?? 'explain');\nconst lang = String(body.lang ?? 'ru');\nconst subject = String(body.subject ?? '').slice(0, 200);\nconst material = String(body.material ?? '').slice(0, 2500);\n\nif (!subject || !material) {\n  return [{ json: { bad: true, reason: 'пустой запрос' } }];\n}\n\nconst tasks = {\n  explain: 'Объясни это проще, как будто рассказываешь человеку, который слышит про это впервые. Никакого жаргона.',\n  why: 'Объясни, почему это важно и как это связано с сегодняшним днём.',\n  next: 'Подскажи, что логично посмотреть дальше, и коротко скажи почему. Предлагай только то, что упомянуто в тексте.',\n};\n\nconst rules = [\n  'Ты гид внутри приложения по истории. Твоя работа — помочь понять то, что человек уже открыл.',\n  'Опирайся ТОЛЬКО на текст ниже. Если в нём нет ответа, честно скажи: «в этой карточке об этом не сказано».',\n  'НЕ называй дат, имён и чисел, которых нет в тексте. Вообще никаких. Это важнее, чем полнота ответа.',\n  'Отвечай на языке с кодом ' + lang + '.',\n  'Три-четыре предложения, не больше. Простыми словами.',\n].join('\\n');\n\nconst prompt = rules + '\\n\\nЗАДАНИЕ: ' + (tasks[intent] ?? tasks.explain) +\n  '\\n\\nО ЧЁМ: ' + subject + '\\n\\nТЕКСТ:\\n' + material;\n\nreturn [{ json: { prompt, lang, subject } }];"
+      },
+      "id": "build-prompt",
+      "name": "Собрать задание",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-240, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "version": 2 },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.bad }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-bad",
+      "name": "Запрос пустой?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-20, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "x-goog-api-key", "value": "={{ $env.GEMINI_API_KEY }}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { temperature: 0.4, maxOutputTokens: 300 } }) }}",
+        "options": { "timeout": 20000 }
+      },
+      "id": "call-model",
+      "name": "Бесплатная модель Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ответ приложению. Поле app обязательно: приложение отказывается\n// показывать неподписанный ответ.\n//\n// Так поймана давняя беда NEXUS: там адрес указывал на воркфлоу другого\n// приложения, и «наставник по коду» учил инвестициям. Подпись делает\n// такую подмену видимой сразу.\n\nconst raw = $input.first().json;\nconst answer = raw?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';\n\nreturn [{\n  json: {\n    app: 'atlas',\n    answer: String(answer).trim().slice(0, 900),\n  },\n}];"
+      },
+      "id": "shape-answer",
+      "name": "Подписать ответ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 100]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { app: 'atlas', answer: '' } }];"
+      },
+      "id": "empty-answer",
+      "name": "Пустой ответ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, -100]
+    },
+    {
+      "parameters": { "options": {} },
+      "id": "respond",
+      "name": "Ответ приложению",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "Вход из приложения": { "main": [[{ "node": "Собрать задание", "type": "main", "index": 0 }]] },
+    "Собрать задание": { "main": [[{ "node": "Запрос пустой?", "type": "main", "index": 0 }]] },
+    "Запрос пустой?": {
+      "main": [
+        [{ "node": "Пустой ответ", "type": "main", "index": 0 }],
+        [{ "node": "Бесплатная модель Gemini", "type": "main", "index": 0 }]
+      ]
+    },
+    "Бесплатная модель Gemini": { "main": [[{ "node": "Подписать ответ", "type": "main", "index": 0 }]] },
+    "Подписать ответ": { "main": [[{ "node": "Ответ приложению", "type": "main", "index": 0 }]] },
+    "Пустой ответ": { "main": [[{ "node": "Ответ приложению", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "tags": [{ "name": "atlas" }]
+}

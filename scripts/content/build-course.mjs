@@ -22,12 +22,19 @@ const CONTENT = resolve(ROOT, 'content')
 const OUT_DIR = resolve(ROOT, 'public', 'data')
 const OUT = resolve(OUT_DIR, 'course.json')
 
-/** Что означает `prop` в разделе facts. */
+/**
+ * Что означает `prop` в разделе facts.
+ *
+ * У каждого — цепочка свойств, потому что Wikidata описывает одно и то же
+ * по-разному: у государства начало лежит в «дате основания», а у войны —
+ * в «времени начала». Цепочка ТА ЖЕ, что в сборке справочника: иначе ворота
+ * ругались бы на даты, которые приложение спокойно показывает.
+ */
 const PROP_MAP = {
-  birth: 'P569',
-  death: 'P570',
-  start: 'P571',
-  end: 'P576',
+  birth: ['P569'],
+  death: ['P570'],
+  start: ['P571', 'P580'],
+  end: ['P576', 'P582'],
 }
 
 const problems = []
@@ -72,12 +79,16 @@ async function main() {
         fail(`${fact.chapter}: ${fact.q} — такой карточки в Wikidata нет`)
         continue
       }
-      const prop = PROP_MAP[fact.prop]
-      if (!prop) {
+      const props = PROP_MAP[fact.prop]
+      if (!props) {
         fail(`${fact.chapter}: непонятно, что проверять — «${fact.prop}»`)
         continue
       }
-      const actual = claimTime(item, prop)
+      let actual
+      for (const prop of props) {
+        actual = claimTime(item, prop)
+        if (actual) break
+      }
       if (!actual) {
         fail(`${fact.chapter}: у ${fact.q} (${nameOf(item)}) нет даты «${fact.prop}» в Wikidata`)
         continue

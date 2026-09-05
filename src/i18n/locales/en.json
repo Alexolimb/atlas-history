@@ -288,5 +288,20 @@
     "hint": "One card for today — tomorrow it will be another.",
     "reveal": "Who is this?",
     "open": "Open"
+  },
+  "guide": {
+    "title": "Guide",
+    "hint": "The guide explains what is open on this screen. It answers from that alone — inventing dates is forbidden to it.",
+    "explain": "Explain it simply",
+    "why": "Why it matters",
+    "next": "What next",
+    "asking": "Asking the guide…",
+    "disclaimer": "This is the guide retelling. Exact dates and names are above; those are checked against sources.",
+    "errors": {
+      "offline": "The guide needs the internet. The reference and the path work without it.",
+      "unavailable": "The guide is not available yet. The app does not suffer for it.",
+      "foreign": "The guide answered from somewhere else, so the answer is not shown. That is deliberate: no passing off someone else words as ours.",
+      "empty": "The guide found nothing to say about this card."
+    }
   }
 }

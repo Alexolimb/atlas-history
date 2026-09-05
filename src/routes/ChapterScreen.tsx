@@ -19,6 +19,7 @@ import {
 import { epochOf, epochSpan } from '@/lib/epochs'
 import EntityLink from '@/components/EntityLink'
 import Quiz from '@/components/Quiz'
+import GuidePanel from '@/components/GuidePanel'
 
 const XP_FOR_CHAPTER = 60
 const XP_PER_RIGHT_ANSWER = 15
@@ -208,6 +209,8 @@ export default function ChapterScreen() {
             </div>
           )}
         </section>
+
+        <GuidePanel subject={text.title} material={text.body} />
 
         <nav className="chapter-page__nav">
           {prev ? (

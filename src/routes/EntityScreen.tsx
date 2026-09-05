@@ -11,6 +11,7 @@ import EntityImage from '@/components/EntityImage'
 import EntityLink from '@/components/EntityLink'
 import FamilyTree from '@/components/FamilyTree'
 import RulerTimeline from '@/components/RulerTimeline'
+import GuidePanel from '@/components/GuidePanel'
 
 /**
  * Карточка одной вещи: страны, человека, события или династии.
@@ -157,6 +158,12 @@ export default function EntityScreen() {
         {(entity.type === 'event' || entity.type === 'dynasty') && (
           <OtherBody lib={lib} entity={entity} />
         )}
+
+        <GuidePanel
+          subject={name}
+          qid={entity.id}
+          material={[span, labels?.descr, article?.extract].filter(Boolean).join('. ')}
+        />
 
         <Sources lib={lib} entity={entity} />
       </article>
