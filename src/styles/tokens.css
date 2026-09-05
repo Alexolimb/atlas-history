@@ -1,0 +1,142 @@
+/*
+ * Atlas — палитра «тёмный музей».
+ * Все цвета живут ТОЛЬКО здесь. В компонентах — только var(--…).
+ * Светлая тема переопределяет те же имена, поэтому ни один экран
+ * не надо переписывать ради смены темы.
+ */
+
+:root {
+  /* ---- Тёмная тема (по умолчанию) ---- */
+  --bg: #0b1120;
+  --bg-deep: #070c17;
+  --surface: #131c30;
+  --surface-2: #1b2740;
+  --surface-3: #24324f;
+
+  --ink: #f2ead8; /* слоновая кость — основной текст */
+  --ink-dim: #b9c2d4;
+  --ink-mute: #8b97ae;
+
+  --gold: #d4af37;
+  --gold-soft: #e8cd77;
+  --gold-deep: #a3821c;
+
+  --line: rgba(212, 175, 55, 0.22);
+  --line-soft: rgba(242, 234, 216, 0.1);
+
+  --accent-cool: #6ea8d8; /* карты, ссылки-действия */
+  --ok: #6fbf8b;
+  --warn: #e0a458;
+  --danger: #d9705f;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 20px 60px rgba(0, 0, 0, 0.55);
+
+  --glow-gold: 0 0 0 1px rgba(212, 175, 55, 0.35), 0 6px 28px rgba(212, 175, 55, 0.16);
+
+  /* ---- Типографика ---- */
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+  --fs-3xl: 2.25rem;
+  --fs-4xl: 3rem;
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.55;
+  --lh-loose: 1.75;
+
+  /* ---- Ритм ---- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --content-max: 780px;
+  --wide-max: 1240px;
+
+  /* ---- Движение (гасится настройкой «меньше движения») ---- */
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- Служебное ---- */
+  --nav-h: 64px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+
+  color-scheme: dark;
+}
+
+/* ---- Светлая тема: «пергамент» ---- */
+[data-theme='light'] {
+  --bg: #f6f1e4;
+  --bg-deep: #ece4d2;
+  --surface: #fffdf7;
+  --surface-2: #f5efe0;
+  --surface-3: #eae1cd;
+
+  --ink: #1e1c17;
+  --ink-dim: #4a4539;
+  --ink-mute: #7a7263;
+
+  --gold: #8a6e12;
+  --gold-soft: #a98a26;
+  --gold-deep: #6b5409;
+
+  --line: rgba(138, 110, 18, 0.28);
+  --line-soft: rgba(30, 28, 23, 0.12);
+
+  --accent-cool: #2d6ea3;
+  --ok: #3f7d55;
+  --warn: #9a6414;
+  --danger: #a53f2e;
+
+  --shadow-1: 0 1px 2px rgba(60, 50, 25, 0.12);
+  --shadow-2: 0 8px 24px rgba(60, 50, 25, 0.12);
+  --shadow-3: 0 20px 60px rgba(60, 50, 25, 0.16);
+  --glow-gold: 0 0 0 1px rgba(138, 110, 18, 0.3), 0 6px 24px rgba(138, 110, 18, 0.14);
+
+  color-scheme: light;
+}
+
+/* ---- Размер текста: настройка человека ---- */
+[data-text='small'] {
+  --fs-base: 0.9375rem;
+  --fs-lg: 1.0625rem;
+  --fs-xl: 1.25rem;
+}
+[data-text='large'] {
+  --fs-base: 1.125rem;
+  --fs-lg: 1.3125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+}
+
+/*
+ * Меньше движения. У Алекса анимации Windows выключены, и системный
+ * prefers-reduced-motion гасил бы всё сам — поэтому НЕ вешаемся на систему,
+ * а слушаем только явную настройку в приложении.
+ */
+[data-motion='reduced'] * {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}

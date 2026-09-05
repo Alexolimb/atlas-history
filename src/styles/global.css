@@ -1,0 +1,295 @@
+@import './tokens.css';
+@import './components.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--fs-3xl);
+}
+h2 {
+  font-size: var(--fs-2xl);
+}
+h3 {
+  font-size: var(--fs-xl);
+}
+
+p {
+  margin: 0 0 var(--sp-4);
+}
+
+a {
+  color: var(--gold-soft);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Заставка до загрузки приложения ---------- */
+.boot-splash {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #0b1120;
+}
+.boot-splash__mark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 2.5rem;
+  letter-spacing: 0.32em;
+  color: #d4af37;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ---------- Каркас приложения ---------- */
+.app-shell {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1200px 700px at 50% -10%, rgba(212, 175, 55, 0.07), transparent 65%),
+    var(--bg);
+}
+
+.app-main {
+  flex: 1;
+  padding-top: calc(var(--sp-4) + var(--safe-t));
+  padding-bottom: calc(var(--nav-h) + var(--sp-5) + var(--safe-b));
+}
+
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+}
+.container--wide {
+  max-width: var(--wide-max);
+}
+
+/* ---------- Нижняя навигация (телефон) / боковая (широкий экран) ---------- */
+.nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  height: calc(var(--nav-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  display: flex;
+  align-items: stretch;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+
+.nav__item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: none;
+  border: 0;
+  color: var(--ink-mute);
+  font-size: var(--fs-xs);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+  position: relative;
+}
+.nav__item:hover {
+  text-decoration: none;
+  color: var(--ink-dim);
+}
+.nav__item[aria-current='page'] {
+  color: var(--gold);
+}
+.nav__item[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 0 0 2px 2px;
+}
+.nav__icon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.6;
+}
+
+@media (min-width: 900px) {
+  .app-shell {
+    flex-direction: row;
+  }
+  .nav {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    height: 100vh;
+    width: 232px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--sp-1);
+    padding: var(--sp-6) var(--sp-3);
+    border-top: 0;
+    border-right: 1px solid var(--line);
+  }
+  .nav__brand {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--fs-2xl);
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 0 var(--sp-3) var(--sp-6);
+  }
+  .nav__item {
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--sp-3);
+    padding: var(--sp-3) var(--sp-3);
+    border-radius: var(--radius);
+    font-size: var(--fs-base);
+  }
+  .nav__item[aria-current='page'] {
+    background: var(--surface-2);
+  }
+  .nav__item[aria-current='page']::before {
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    border-radius: 0 2px 2px 0;
+  }
+  .app-main {
+    padding-bottom: var(--sp-8);
+  }
+}
+
+.nav__brand {
+  display: none;
+}
+
+/* ---------- Общие мелочи ---------- */
+.page-head {
+  margin-bottom: var(--sp-6);
+}
+.page-head__kicker {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: var(--sp-2);
+}
+.page-head__sub {
+  color: var(--ink-dim);
+  max-width: 60ch;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-1);
+}
+
+.rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+  border: 0;
+  margin: var(--sp-6) 0;
+}
+
+.stub {
+  display: grid;
+  gap: var(--sp-3);
+  place-items: center;
+  text-align: center;
+  padding: var(--sp-8) var(--sp-4);
+  color: var(--ink-mute);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+}
+.stub__badge {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  padding: var(--sp-1) var(--sp-3);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

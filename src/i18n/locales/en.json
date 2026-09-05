@@ -1,0 +1,121 @@
+{
+  "app": {
+    "name": "Atlas",
+    "tagline": "The whole history of the world in one app"
+  },
+  "nav": {
+    "globe": "Globe",
+    "path": "Path",
+    "reference": "Reference",
+    "review": "Review",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "globe": {
+    "kicker": "Map of time",
+    "title": "The whole world, any year",
+    "sub": "Drag the slider from −10000 to today: states of that era light up on the globe. Tap any one to open its history."
+  },
+  "path": {
+    "kicker": "Path through the eras",
+    "title": "From the first humans to today",
+    "sub": "Twelve eras, several chapters in each. The order is suggested, but nothing is locked: open anything, anytime."
+  },
+  "reference": {
+    "kicker": "Reference",
+    "title": "Countries, people, events",
+    "sub": "Every state and empire, rulers, dynasties and family trees. Every fact carries a link to its source."
+  },
+  "review": {
+    "kicker": "Review",
+    "title": "Come back to what fades",
+    "sub": "The app returns a fact to you exactly when it starts slipping out of memory."
+  },
+  "profile": {
+    "kicker": "Profile",
+    "title": "Your path",
+    "sub": "Experience, level, day streak and achievements. Progress is stored on this device.",
+    "stats": {
+      "level": "Level",
+      "levelCaption": "{{into}} of {{need}} XP",
+      "streak": "Streak",
+      "streakCaption": "days in a row",
+      "chapters": "Chapters",
+      "chaptersCaption": "completed",
+      "cards": "Cards",
+      "cardsCaption": "opened"
+    }
+  },
+  "settings": {
+    "kicker": "Settings",
+    "title": "However suits you",
+    "language": {
+      "title": "Language",
+      "sub": "One choice sets both the menus and the language of names and descriptions in the reference.",
+      "uiFallback": "interface still in English"
+    },
+    "theme": {
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "system": "Match system"
+    },
+    "text": {
+      "title": "Text size",
+      "small": "Smaller",
+      "normal": "Normal",
+      "large": "Larger"
+    },
+    "motion": {
+      "title": "Reduce motion",
+      "sub": "Turns off smooth transitions and globe rotation."
+    },
+    "globe3d": {
+      "title": "3D globe",
+      "sub": "Turn off if your device stutters: you get a flat map instead of a sphere."
+    },
+    "music": {
+      "title": "Background music",
+      "sub": "Calm lo-fi while you read. Off by default.",
+      "volume": "Volume"
+    },
+    "sound": {
+      "title": "Page sounds",
+      "sub": "A quiet rustle when you turn a page."
+    },
+    "progress": {
+      "title": "Progress",
+      "sub": "Progress lives on this device. To move it to another one, save a file here and load it there.",
+      "save": "Save to file",
+      "load": "Load from file",
+      "reset": "Erase progress",
+      "resetConfirm": "Erase all progress on this device? This cannot be undone.",
+      "loaded": "Progress loaded",
+      "loadFailed": "Could not read the file: it is not from Atlas or it is damaged"
+    },
+    "about": {
+      "title": "About",
+      "sources": "Sources and licences",
+      "version": "Version"
+    },
+    "sub": "Language, theme, text size, music and progress transfer — all in one place."
+  },
+  "sources": {
+    "kicker": "Honesty",
+    "title": "Sources and licences",
+    "dataTitle": "Where the data comes from",
+    "bordersNote": "Historical borders are approximate: before the Peace of Westphalia (1648) sharp lines on a map simply did not exist. Each snapshot carries the author's own precision rating.",
+    "sub": "Atlas invents nothing. Every fact comes from open databases, and every card carries a link so you can check it yourself."
+  },
+  "common": {
+    "soon": "Soon",
+    "soonHint": "This part arrives at the next step of the build.",
+    "back": "Back",
+    "offline": "No connection — showing what is stored on this device",
+    "updateReady": "An update is ready",
+    "updateAction": "Update",
+    "installTitle": "Install Atlas as an app",
+    "installAction": "Install",
+    "installLater": "Later"
+  }
+}

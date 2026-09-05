@@ -1,0 +1,295 @@
+/* Кирпичики интерфейса. Цвета — только из tokens.css. */
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 44px; /* палец, а не мышь */
+  padding: 0 var(--sp-5);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+.btn:hover {
+  background: var(--surface-3);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn--gold {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #14100a;
+  font-weight: 600;
+}
+.btn--gold:hover {
+  background: var(--gold-soft);
+}
+.btn--ghost {
+  background: transparent;
+}
+.btn--danger {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
+}
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+}
+.btn--sm {
+  min-height: 34px;
+  padding: 0 var(--sp-4);
+  font-size: var(--fs-xs);
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+/* ---------- Полоски-сообщения ---------- */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: var(--fs-sm);
+}
+.banner--quiet {
+  color: var(--ink-mute);
+  border-style: dashed;
+}
+
+/* ---------- Настройки ---------- */
+.setting {
+  margin-bottom: var(--sp-4);
+}
+.setting__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  justify-content: space-between;
+}
+.setting__title {
+  font-size: var(--fs-lg);
+  font-family: var(--font-display);
+}
+.setting__sub {
+  margin: var(--sp-2) 0 0;
+  color: var(--ink-mute);
+  font-size: var(--fs-sm);
+  max-width: 62ch;
+}
+.setting__body {
+  margin-top: var(--sp-4);
+  display: grid;
+  gap: var(--sp-4);
+  justify-items: start;
+}
+
+.input {
+  width: 100%;
+  max-width: 420px;
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+}
+
+/* ---------- Переключатель из нескольких вариантов ---------- */
+.segmented {
+  /* Сетка, а не флекс: на узком телефоне три варианта делят ширину поровну
+     и не сваливаются во вторую строку рваным хвостом. */
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  width: 100%;
+  max-width: 420px;
+  padding: 3px;
+  gap: 3px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-pill);
+}
+.segmented__btn {
+  min-height: 38px;
+  padding: 0 var(--sp-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-dim);
+  font-size: var(--fs-sm);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.segmented__btn[aria-pressed='true'] {
+  background: var(--gold);
+  color: #14100a;
+  font-weight: 600;
+}
+
+/* ---------- Тумблер ---------- */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle__track {
+  width: 52px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-3);
+  border: 1px solid var(--line-soft);
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  transition: background var(--dur) var(--ease);
+}
+.toggle__thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink-mute);
+  transition:
+    transform var(--dur) var(--ease),
+    background var(--dur) var(--ease);
+}
+.toggle input:checked + .toggle__track {
+  background: color-mix(in srgb, var(--gold) 35%, var(--surface-3));
+}
+.toggle input:checked + .toggle__track .toggle__thumb {
+  transform: translateX(22px);
+  background: var(--gold);
+}
+.toggle input:focus-visible + .toggle__track {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.toggle input:disabled + .toggle__track {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slider {
+  display: grid;
+  gap: var(--sp-2);
+  width: 100%;
+  max-width: 420px;
+  font-size: var(--fs-sm);
+  color: var(--ink-mute);
+}
+.slider input {
+  width: 100%;
+  accent-color: var(--gold);
+}
+.slider input:disabled {
+  opacity: 0.45;
+}
+
+/* ---------- Профиль ---------- */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+.stat {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.stat__label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.stat__value {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  line-height: 1;
+  color: var(--ink);
+}
+.stat__caption {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+}
+
+/* ---------- Источники ---------- */
+.source-list {
+  display: grid;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+.source h3 {
+  font-size: var(--fs-lg);
+  margin-bottom: var(--sp-2);
+}
+.source__what {
+  margin: 0 0 var(--sp-2);
+  color: var(--ink-dim);
+  font-size: var(--fs-sm);
+}
+.source__licence {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
+}
+
+.note {
+  font-size: var(--fs-sm);
+  color: var(--ink-mute);
+  max-width: 68ch;
+}
+
+.stub__part {
+  font-size: var(--fs-xs);
+  color: var(--ink-mute);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+/* ---------- Полоса опыта ---------- */
+.xp-bar {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  overflow: hidden;
+  margin-top: var(--sp-2);
+}
+.xp-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+  transition: width var(--dur-slow) var(--ease);
+}

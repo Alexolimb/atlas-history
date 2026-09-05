@@ -1,0 +1,63 @@
+name: Сборка и выкладка на GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Выкладка идёт по одной: если пушнули дважды подряд, доедет последняя.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Иконки
+        run: node scripts/make-icons.mjs
+
+      - name: Проверка (типы, тесты, сборка, бюджет размера)
+        run: npm run check
+
+      # Ворота: пустая или урезанная сборка НЕ должна уезжать на живой адрес.
+      # Эта проверка стоит здесь потому, что на другом проекте выкладка
+      # молча publish-ила пустоту неделю, и никто не заметил.
+      - name: Ворота — сборка не пустая
+        run: |
+          test -f dist/index.html || { echo "нет dist/index.html"; exit 1; }
+          test -f dist/404.html || { echo "нет dist/404.html — маршруты отдадут 404"; exit 1; }
+          test -f dist/manifest.webmanifest || { echo "нет манифеста — приложение не поставится"; exit 1; }
+          test -f dist/sw.js || { echo "нет service worker — не будет офлайна"; exit 1; }
+          count=$(find dist -type f | wc -l)
+          echo "файлов в сборке: $count"
+          test "$count" -ge 10 || { echo "подозрительно мало файлов"; exit 1; }
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
