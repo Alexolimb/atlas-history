@@ -12,7 +12,10 @@
       "name": "Вход из приложения",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [-460, 0],
+      "position": [
+        -460,
+        0
+      ],
       "webhookId": "atlas-guide"
     },
     {
@@ -23,17 +26,27 @@
       "name": "Собрать задание",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-240, 0]
+      "position": [
+        -240,
+        0
+      ]
     },
     {
       "parameters": {
         "conditions": {
-          "options": { "caseSensitive": true, "version": 2 },
+          "options": {
+            "caseSensitive": true,
+            "version": 2
+          },
           "conditions": [
             {
               "leftValue": "={{ $json.bad }}",
               "rightValue": true,
-              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
             }
           ],
           "combinator": "and"
@@ -44,29 +57,47 @@
       "name": "Запрос пустой?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [-20, 0]
+      "position": [
+        -20,
+        0
+      ]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Content-Type", "value": "application/json" },
-            { "name": "x-goog-api-key", "value": "={{ $env.GEMINI_API_KEY }}" }
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify({ contents: [{ parts: [{ text: $json.prompt }] }], generationConfig: { temperature: 0.4, maxOutputTokens: 300 } }) }}",
-        "options": { "timeout": 20000 }
+        "options": {
+          "timeout": 20000
+        },
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googlePalmApi"
       },
       "id": "call-model",
       "name": "Бесплатная модель Gemini",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [220, 100]
+      "position": [
+        220,
+        100
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "g08GGY6VsVVxo6Iw",
+          "name": "Gemini (free LLM)"
+        }
+      }
     },
     {
       "parameters": {
@@ -76,7 +107,10 @@
       "name": "Подписать ответ",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [440, 100]
+      "position": [
+        440,
+        100
+      ]
     },
     {
       "parameters": {
@@ -86,30 +120,106 @@
       "name": "Пустой ответ",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [220, -100]
+      "position": [
+        220,
+        -100
+      ]
     },
     {
-      "parameters": { "options": {} },
+      "parameters": {
+        "options": {}
+      },
       "id": "respond",
       "name": "Ответ приложению",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [660, 0]
+      "position": [
+        660,
+        0
+      ]
     }
   ],
   "connections": {
-    "Вход из приложения": { "main": [[{ "node": "Собрать задание", "type": "main", "index": 0 }]] },
-    "Собрать задание": { "main": [[{ "node": "Запрос пустой?", "type": "main", "index": 0 }]] },
-    "Запрос пустой?": {
+    "Вход из приложения": {
       "main": [
-        [{ "node": "Пустой ответ", "type": "main", "index": 0 }],
-        [{ "node": "Бесплатная модель Gemini", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "Собрать задание",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "Бесплатная модель Gemini": { "main": [[{ "node": "Подписать ответ", "type": "main", "index": 0 }]] },
-    "Подписать ответ": { "main": [[{ "node": "Ответ приложению", "type": "main", "index": 0 }]] },
-    "Пустой ответ": { "main": [[{ "node": "Ответ приложению", "type": "main", "index": 0 }]] }
+    "Собрать задание": {
+      "main": [
+        [
+          {
+            "node": "Запрос пустой?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Запрос пустой?": {
+      "main": [
+        [
+          {
+            "node": "Пустой ответ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Бесплатная модель Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Бесплатная модель Gemini": {
+      "main": [
+        [
+          {
+            "node": "Подписать ответ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Подписать ответ": {
+      "main": [
+        [
+          {
+            "node": "Ответ приложению",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Пустой ответ": {
+      "main": [
+        [
+          {
+            "node": "Ответ приложению",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
-  "settings": { "executionOrder": "v1" },
-  "tags": [{ "name": "atlas" }]
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "atlas"
+    }
+  ]
 }
