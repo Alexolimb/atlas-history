@@ -1,0 +1,32 @@
+{
+  "tracks": [
+    {
+      "file": "deliberate-thought.mp3",
+      "title": "Deliberate Thought",
+      "author": "Kevin MacLeod",
+      "licence": "CC BY 4.0",
+      "source": "https://incompetech.com/music/royalty-free/"
+    },
+    {
+      "file": "daybreak.mp3",
+      "title": "Daybreak",
+      "author": "Kevin MacLeod",
+      "licence": "CC BY 4.0",
+      "source": "https://incompetech.com/music/royalty-free/"
+    },
+    {
+      "file": "aretes.mp3",
+      "title": "Aretes",
+      "author": "Kevin MacLeod",
+      "licence": "CC BY 4.0",
+      "source": "https://incompetech.com/music/royalty-free/"
+    },
+    {
+      "file": "blue-feather.mp3",
+      "title": "Blue Feather",
+      "author": "Kevin MacLeod",
+      "licence": "CC BY 4.0",
+      "source": "https://incompetech.com/music/royalty-free/"
+    }
+  ]
+}

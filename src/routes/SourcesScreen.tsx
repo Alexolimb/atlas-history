@@ -40,10 +40,10 @@ const SOURCES: SourceRow[] = [
     licence: 'GPL-3.0',
   },
   {
-    name: 'Pixabay',
-    url: 'https://pixabay.com/music/',
-    what: 'Фоновая музыка и звуки',
-    licence: 'Pixabay Content License',
+    name: 'Kevin MacLeod (incompetech.com)',
+    url: 'https://incompetech.com/music/royalty-free/',
+    what: 'Фоновая музыка: Deliberate Thought · Daybreak · Aretes · Blue Feather',
+    licence: 'CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/',
   },
 ]
 

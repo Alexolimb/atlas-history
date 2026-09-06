@@ -81,6 +81,19 @@ export default defineConfig({
             },
           },
           {
+            // Музыка: в предзагрузку НЕ идёт (10 МБ при установке — грабёж
+            // трафика у того, кто музыку даже не включит), но однажды
+            // прослушанный трек остаётся в кэше и дальше играет офлайн.
+            urlPattern: ({ url }) => url.pathname.includes('/audio/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'atlas-audio',
+              expiration: { maxEntries: 12, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+              rangeRequests: true,
+            },
+          },
+          {
             // Шрифты: после первой загрузки живут офлайн навсегда.
             urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\/.*/i,
             handler: 'CacheFirst',
